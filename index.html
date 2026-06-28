@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Global Consultant: 10-Level Competency Drill</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; padding: 20px; }
+        .app-container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .input-group { margin: 15px 0; padding: 15px; background: #f8f9fa; border-radius: 8px; }
+        textarea { width: 100%; height: 60px; }
+        .controls { display: flex; gap: 10px; margin-top: 20px; }
+        button { padding: 10px 20px; cursor: pointer; background: #2c3e50; color: white; border: none; }
+        #preview { margin-top: 20px; padding: 15px; border: 1px solid #ddd; display: none; }
+        /* Color Coding for STAR Layers */
+        .scene { color: #2980b9; font-weight: bold; } /* Situation */
+        .challenge { color: #c0392b; font-weight: bold; } /* Task */
+        .flow { color: #8e44ad; font-weight: bold; } /* Action (Past Cont.) */
+        .sowhat { color: #27ae60; font-weight: bold; } /* Result */
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <h2 id="level-title">Level 1: Clinical Sponsorship</h2>
+    <p id="level-desc">Follow the structural constraints below:</p>
+
+    <div class="input-group">
+        <label>1. Scene (Situation):</label>
+        <textarea id="sit" placeholder="Describe the professional setting..."></textarea>
+    </div>
+    <div class="input-group">
+        <label>2. Challenge (Task):</label>
+        <textarea id="task" placeholder="Define the core professional obstacle..."></textarea>
+    </div>
+    <div class="input-group">
+        <label>3. Strategy (Action - Use Past Continuous):</label>
+        <textarea id="act" placeholder="While I was working..."></textarea>
+    </div>
+    <div class="input-group">
+        <label>4. Impact (So What?):</label>
+        <textarea id="res" placeholder="Ultimately, this demonstrates..."></textarea>
+    </div>
+
+    <div class="controls">
+        <button onclick="preview()">Preview & Color-Code</button>
+        <button onclick="nextLevel()">Next Competency</button>
+        <button onclick="speak()">Speak</button>
+    </div>
+
+    <div id="preview"></div>
+</div>
+
+<script>
+    const levels = [
+        "Clinical Sponsorship", "NPSG Compliance", "Global Labor Transfer", 
+        "Professional Ethics", "Crisis Management", "Interdisciplinary Teams", 
+        "Medical Documentation", "Patient Advocacy", "Cultural Competence", "Systemic Leadership"
+    ];
+    let current = 0;
+
+    function preview() {
+        const s = document.getElementById('sit').value;
+        const t = document.getElementById('task').value;
+        const a = document.getElementById('act').value;
+        const r = document.getElementById('res').value;
+        document.getElementById('preview').style.display = 'block';
+        document.getElementById('preview').innerHTML = 
+            `<p><span class="scene">Scene:</span> ${s}</p>` +
+            `<p><span class="challenge">Challenge:</span> ${t}</p>` +
+            `<p><span class="flow">Action:</span> ${a}</p>` +
+            `<p><span class="sowhat">Impact:</span> ${r}</p>`;
+    }
+
+    function nextLevel() {
+        current = (current + 1) % levels.length;
+        document.getElementById('level-title').innerText = "Level " + (current + 1) + ": " + levels[current];
+        document.querySelectorAll('textarea').forEach(t => t.value = '');
+        document.getElementById('preview').style.display = 'none';
+    }
+
+    function speak() {
+        const text = document.getElementById('preview').innerText;
+        window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+    }
+</script>
+</body>
+</html>
