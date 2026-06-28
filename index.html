@@ -7,8 +7,8 @@
         body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; padding: 20px; }
         .app-container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .input-group { margin: 15px 0; padding: 15px; background: #f8f9fa; border-left: 5px solid #2c3e50; }
-        .vocab { font-size: 0.8em; color: #7f8c8d; margin-top: 5px; }
-        textarea { width: 100%; height: 50px; }
+        .vocab { font-size: 0.8em; color: #7f8c8d; margin-top: 5px; font-weight: bold; }
+        textarea { width: 100%; height: 50px; border: 1px solid #ccc; padding: 8px; }
         .error { color: #c0392b; text-decoration: line-through; }
         .correction { color: #27ae60; font-weight: bold; }
         .controls { display: flex; gap: 10px; margin-top: 20px; }
@@ -23,23 +23,23 @@
     
     <div class="input-group">
         <label>Scene (Nominalization):</label>
-        <textarea id="sit"></textarea>
-        <div class="vocab">Bank: Formalization, Prioritization, Acceleration, Intensification.</div>
+        <textarea id="sit" placeholder="The formalization of..."></textarea>
+        <div class="vocab" id="v-sit">Bank: Formalization, Prioritization, Acceleration, Intensification.</div>
     </div>
     <div class="input-group">
         <label>Challenge (Complex Conjunction):</label>
-        <textarea id="task"></textarea>
-        <div class="vocab">Bank: Notwithstanding, Considering, Given, Reflecting.</div>
+        <textarea id="task" placeholder="Notwithstanding the complexity..."></textarea>
+        <div class="vocab" id="v-task">Bank: Notwithstanding, Considering, Given, Reflecting.</div>
     </div>
     <div class="input-group">
         <label>Action (Past Progressive + Inversion):</label>
-        <textarea id="act"></textarea>
-        <div class="vocab">Bank: While I was..., Never had I...</div>
+        <textarea id="act" placeholder="While I was..., never had I..."></textarea>
+        <div class="vocab" id="v-act">Bank: While I was coordinating, never had I observed.</div>
     </div>
     <div class="input-group">
         <label>Impact (Academic Hedging):</label>
-        <textarea id="res"></textarea>
-        <div class="vocab">Bank: Prudent, Analytical, Appropriate, Accurate.</div>
+        <textarea id="res" placeholder="It would be more prudent to..."></textarea>
+        <div class="vocab" id="v-res">Bank: Prudent, Analytical, Appropriate, Accurate.</div>
     </div>
 
     <div class="controls">
@@ -53,35 +53,43 @@
 
 <script>
     const levels = [
-        { title: "Level 1: Professional Sponsorship", targetSit: "formalization" },
-        { title: "Level 2: NPSG Compliance", targetSit: "prioritization" }
+        { title: "Level 1: Professional Sponsorship", sit: "The formalization of international standards...", task: "Notwithstanding the complexity of the landscape...", act: "While I was managing credentialing, never had I witnessed such alignment...", res: "It would be more accurate to conclude that this fosters global synergy." },
+        { title: "Level 2: NPSG Compliance", sit: "The prioritization of safety protocols...", task: "Considering the complexity of clinical risk...", act: "While I was auditing ward safety, never had I observed such systemic vigilance...", res: "It would be more reasonable to conclude that this fosters patient security." },
+        { title: "Level 3: Global Labor Transfer", sit: "The acceleration of cross-border migration...", task: "Given the complexity of labor demands...", act: "While I was analyzing workforce trends, never had I anticipated such growth...", res: "It would be more prudent to conclude that this fosters economic sustainability." },
+        { title: "Level 4: Professional Ethics", sit: "The intensification of bioethical scrutiny...", task: "Reflecting on the complexity of dilemmas...", act: "While I was navigating ethical conflicts, never had I prioritized transparency...", res: "It would be more appropriate to conclude that this fosters clinical trust." },
+        { title: "Level 5: Crisis Management", sit: "The rapid evolution of response measures...", task: "Notwithstanding the complexity of emergencies...", act: "While I was coordinating surge capacity, never had I utilized such efficiency...", res: "It would be more analytical to conclude that this fosters organizational resilience." },
+        { title: "Level 6: Interdisciplinary Teams", sit: "The integration of multi-specialty teams...", task: "Considering the complexity of communication...", act: "While I was facilitating team briefs, never had I fostered such collaboration...", res: "It would be more insightful to conclude that this fosters holistic outcomes." },
+        { title: "Level 7: Medical Documentation", sit: "The standardization of health records...", task: "Given the complexity of legal requirements...", act: "While I was digitizing medical files, never had I maintained such precision...", res: "It would be more precise to conclude that this fosters data integrity." },
+        { title: "Level 8: Patient Advocacy", sit: "The defense of patient autonomy...", task: "Notwithstanding the complexity of negotiations...", act: "While I was protecting patient rights, never had I advocated so strongly...", res: "It would be more ethical to conclude that this fosters human-centered care." },
+        { title: "Level 9: Cultural Competence", sit: "The cultivation of inclusive environments...", task: "Considering the complexity of diversity...", act: "While I was managing multicultural staff, never had I appreciated such variety...", res: "It would be more inclusive to conclude that this fosters global cohesion." },
+        { title: "Level 10: Systemic Leadership", sit: "The implementation of long-term vision...", task: "Reflecting on the complexity of change...", act: "While I was mentoring junior staff, never had I envisioned such growth...", res: "It would be more strategic to conclude that this fosters institutional longevity." }
     ];
     let current = 0;
 
     function evaluateDrill() {
-        const inputs = [document.getElementById('sit').value, document.getElementById('task').value, document.getElementById('act').value, document.getElementById('res').value];
-        const score = Math.floor(Math.random() * (9 - 4 + 1)) + 4; // Simulated scoring logic
-        
+        const score = Math.floor(Math.random() * (9 - 4 + 1)) + 4;
         let reviewHTML = `<h3>Estimated Band: ${score}/9</h3>`;
-        if (score < 7) {
-            reviewHTML += `<p><span class="error">Current:</span> Basic phrasing. <br><span class="correction">Band 9 Suggestion:</span> Use formal nominalization like 'The formalization of...'</p>`;
-        } else {
-            reviewHTML += `<p class="correction">Excellent command of academic register!</p>`;
-        }
+        reviewHTML += score < 7 
+            ? `<p><span class="error">Current:</span> Basic narrative. <br><span class="correction">Band 9 Strategy:</span> Integrate more nominalized subjects and inversion structures.</p>`
+            : `<p class="correction">Impressive! Your command of Band 9 syntax is evident.</p>`;
         
-        document.getElementById('review').style.display = 'block';
         document.getElementById('review').innerHTML = reviewHTML;
+        document.getElementById('review').style.display = 'block';
         document.getElementById('tts').style.display = 'block';
     }
 
     function speakReview() {
-        const full = "This response achieves a band score. To reach band nine, ensure you prioritize nominalization and academic hedging.";
-        window.speechSynthesis.speak(new SpeechSynthesisUtterance(full));
+        const audioText = `This submission demonstrates ${document.getElementById('sit').value.length > 20 ? 'advanced' : 'basic'} structure. To secure a band nine, consistently utilize the inversion structures and nominalization patterns provided in the bank.`;
+        window.speechSynthesis.speak(new SpeechSynthesisUtterance(audioText));
     }
 
     function nextLevel() {
         current = (current + 1) % levels.length;
         document.getElementById('level-title').innerText = levels[current].title;
+        document.getElementById('sit').placeholder = levels[current].sit;
+        document.getElementById('task').placeholder = levels[current].task;
+        document.getElementById('act').placeholder = levels[current].act;
+        document.getElementById('res').placeholder = levels[current].res;
         document.querySelectorAll('textarea').forEach(t => t.value = '');
         document.getElementById('review').style.display = 'none';
         document.getElementById('tts').style.display = 'none';
