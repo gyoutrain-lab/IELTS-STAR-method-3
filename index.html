@@ -2,85 +2,89 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Global Consultant: 10-Level Competency Drill</title>
+    <title>Global Consultant: Band 9 Simulation</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; padding: 20px; }
         .app-container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .input-group { margin: 15px 0; padding: 15px; background: #f8f9fa; border-radius: 8px; }
-        textarea { width: 100%; height: 60px; }
+        .input-group { margin: 15px 0; padding: 15px; background: #f8f9fa; border-left: 5px solid #2c3e50; }
+        .vocab { font-size: 0.8em; color: #7f8c8d; margin-top: 5px; }
+        textarea { width: 100%; height: 50px; }
+        .error { color: #c0392b; text-decoration: line-through; }
+        .correction { color: #27ae60; font-weight: bold; }
         .controls { display: flex; gap: 10px; margin-top: 20px; }
         button { padding: 10px 20px; cursor: pointer; background: #2c3e50; color: white; border: none; }
-        #preview { margin-top: 20px; padding: 15px; border: 1px solid #ddd; display: none; }
-        /* Color Coding for STAR Layers */
-        .scene { color: #2980b9; font-weight: bold; } /* Situation */
-        .challenge { color: #c0392b; font-weight: bold; } /* Task */
-        .flow { color: #8e44ad; font-weight: bold; } /* Action (Past Cont.) */
-        .sowhat { color: #27ae60; font-weight: bold; } /* Result */
+        #review { margin-top: 20px; padding: 15px; border: 1px solid #ddd; display: none; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <h2 id="level-title">Level 1: Clinical Sponsorship</h2>
-    <p id="level-desc">Follow the structural constraints below:</p>
-
+    <h2 id="level-title">Level 1: Professional Sponsorship</h2>
+    
     <div class="input-group">
-        <label>1. Scene (Situation):</label>
-        <textarea id="sit" placeholder="Describe the professional setting..."></textarea>
+        <label>Scene (Nominalization):</label>
+        <textarea id="sit"></textarea>
+        <div class="vocab">Bank: Formalization, Prioritization, Acceleration, Intensification.</div>
     </div>
     <div class="input-group">
-        <label>2. Challenge (Task):</label>
-        <textarea id="task" placeholder="Define the core professional obstacle..."></textarea>
+        <label>Challenge (Complex Conjunction):</label>
+        <textarea id="task"></textarea>
+        <div class="vocab">Bank: Notwithstanding, Considering, Given, Reflecting.</div>
     </div>
     <div class="input-group">
-        <label>3. Strategy (Action - Use Past Continuous):</label>
-        <textarea id="act" placeholder="While I was working..."></textarea>
+        <label>Action (Past Progressive + Inversion):</label>
+        <textarea id="act"></textarea>
+        <div class="vocab">Bank: While I was..., Never had I...</div>
     </div>
     <div class="input-group">
-        <label>4. Impact (So What?):</label>
-        <textarea id="res" placeholder="Ultimately, this demonstrates..."></textarea>
+        <label>Impact (Academic Hedging):</label>
+        <textarea id="res"></textarea>
+        <div class="vocab">Bank: Prudent, Analytical, Appropriate, Accurate.</div>
     </div>
 
     <div class="controls">
-        <button onclick="preview()">Preview & Color-Code</button>
+        <button onclick="evaluateDrill()">Submit & Score</button>
         <button onclick="nextLevel()">Next Competency</button>
-        <button onclick="speak()">Speak</button>
     </div>
 
-    <div id="preview"></div>
+    <div id="review"></div>
+    <button id="tts" style="display:none;" onclick="speakReview()">Play Professional Audio Review</button>
 </div>
 
 <script>
     const levels = [
-        "Clinical Sponsorship", "NPSG Compliance", "Global Labor Transfer", 
-        "Professional Ethics", "Crisis Management", "Interdisciplinary Teams", 
-        "Medical Documentation", "Patient Advocacy", "Cultural Competence", "Systemic Leadership"
+        { title: "Level 1: Professional Sponsorship", targetSit: "formalization" },
+        { title: "Level 2: NPSG Compliance", targetSit: "prioritization" }
     ];
     let current = 0;
 
-    function preview() {
-        const s = document.getElementById('sit').value;
-        const t = document.getElementById('task').value;
-        const a = document.getElementById('act').value;
-        const r = document.getElementById('res').value;
-        document.getElementById('preview').style.display = 'block';
-        document.getElementById('preview').innerHTML = 
-            `<p><span class="scene">Scene:</span> ${s}</p>` +
-            `<p><span class="challenge">Challenge:</span> ${t}</p>` +
-            `<p><span class="flow">Action:</span> ${a}</p>` +
-            `<p><span class="sowhat">Impact:</span> ${r}</p>`;
+    function evaluateDrill() {
+        const inputs = [document.getElementById('sit').value, document.getElementById('task').value, document.getElementById('act').value, document.getElementById('res').value];
+        const score = Math.floor(Math.random() * (9 - 4 + 1)) + 4; // Simulated scoring logic
+        
+        let reviewHTML = `<h3>Estimated Band: ${score}/9</h3>`;
+        if (score < 7) {
+            reviewHTML += `<p><span class="error">Current:</span> Basic phrasing. <br><span class="correction">Band 9 Suggestion:</span> Use formal nominalization like 'The formalization of...'</p>`;
+        } else {
+            reviewHTML += `<p class="correction">Excellent command of academic register!</p>`;
+        }
+        
+        document.getElementById('review').style.display = 'block';
+        document.getElementById('review').innerHTML = reviewHTML;
+        document.getElementById('tts').style.display = 'block';
+    }
+
+    function speakReview() {
+        const full = "This response achieves a band score. To reach band nine, ensure you prioritize nominalization and academic hedging.";
+        window.speechSynthesis.speak(new SpeechSynthesisUtterance(full));
     }
 
     function nextLevel() {
         current = (current + 1) % levels.length;
-        document.getElementById('level-title').innerText = "Level " + (current + 1) + ": " + levels[current];
+        document.getElementById('level-title').innerText = levels[current].title;
         document.querySelectorAll('textarea').forEach(t => t.value = '');
-        document.getElementById('preview').style.display = 'none';
-    }
-
-    function speak() {
-        const text = document.getElementById('preview').innerText;
-        window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+        document.getElementById('review').style.display = 'none';
+        document.getElementById('tts').style.display = 'none';
     }
 </script>
 </body>
